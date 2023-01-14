@@ -1,10 +1,10 @@
 Update 15 August 2019: Added experimental step offset functionality. (not in demos)
 
 # Unity Source Movement
+
 Based on Fragsurf by cr4yz (Jake E.), available here: https://github.com/AwesomeX/Fragsurf-Character-Controller/
 
 Video demo: https://www.youtube.com/watch?v=w5BquYbCBAE
-
 
 An adaptation of the Source engine's movement mechanics in Unity, including strafe jumping, surfing, bunnyhopping, swimming, crouching and jump-crouching (optional), as well as sliding (optional). The player can also push rigidbodies around.
 

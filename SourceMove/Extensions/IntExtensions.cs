@@ -1,6 +1,5 @@
-﻿
-public static class IntExtensions {
-
+﻿public static class IntExtensions
+{
     /// <summary>
     /// 
     /// </summary>

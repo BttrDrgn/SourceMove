@@ -1,22 +1,22 @@
 ﻿using UnityEngine;
 
-namespace Fragsurf.Movement {
-
-    public enum MoveType {
+namespace Fragsurf.Movement
+{
+    public enum MoveType
+    {
         None,
         Walk,
         Noclip, // not implemented
         Ladder, // not implemented
     }
 
-    public class MoveData {
-
+    public class MoveData
+    {
         ///// Fields /////
-        
         public Transform playerTransform;
         public Transform viewTransform;
         public Vector3 viewTransformDefaultLocalPos;
-        
+
         public Vector3 origin;
         public Vector3 viewAngles;
         public Vector3 velocity;
@@ -44,7 +44,7 @@ namespace Fragsurf.Movement {
         public bool slidingEnabled = false;
         public bool laddersEnabled = false;
         public bool angledLaddersEnabled = false;
-        
+
         public bool climbingLadder = false;
         public Vector3 ladderNormal = Vector3.zero;
         public Vector3 ladderDirection = Vector3.forward;
@@ -59,7 +59,6 @@ namespace Fragsurf.Movement {
         public float fallingVelocity = 0f;
 
         public bool useStepOffset = false;
-        public float stepOffset = 0f; 
-
+        public float stepOffset = 0f;
     }
 }

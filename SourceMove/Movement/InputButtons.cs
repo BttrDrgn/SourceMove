@@ -1,8 +1,9 @@
 ﻿
-namespace Fragsurf.Movement {
-
+namespace Fragsurf.Movement
+{
     [System.Flags]
-    public enum InputButtons {
+    public enum InputButtons
+    {
         None = 0,
         Jump = 1 << 1,
         Duck = 1 << 2,
@@ -12,5 +13,4 @@ namespace Fragsurf.Movement {
         MoveForward = 1 << 6,
         MoveBack = 1 << 7
     }
-
 }

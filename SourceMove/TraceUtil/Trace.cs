@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 
-namespace Fragsurf.TraceUtil {
-    public struct Trace {
-
+namespace Fragsurf.TraceUtil
+{
+    public struct Trace
+    {
         public Vector3 startPos;
         public Vector3 endPos;
         public float fraction;
@@ -11,6 +12,5 @@ namespace Fragsurf.TraceUtil {
         public Vector3 hitPoint;
         public Vector3 planeNormal;
         public float distance;
-
     }
 }
