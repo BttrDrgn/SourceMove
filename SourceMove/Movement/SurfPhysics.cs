@@ -113,8 +113,9 @@ namespace Fragsurf.Movement
 
             float forwardDistance = forwardMagnitude * Time.deltaTime;
             Trace forwardTrace = Tracer.TraceCollider(collider, upOrigin, upOrigin + forwardDirection * forwardMagnitude, groundLayerMask);
-            if (forwardTrace.hitCollider != null && forwardDistance <= 0f) // Don't bother doing the rest if we can't move forward anyway
-                return false;
+            if (forwardTrace.hitCollider != null) // Don't bother doing the rest if we can't move forward anyway
+                if (forwardDistance <= 0f)
+                    return false;
 
             Vector3 upForwardOrigin = upOrigin + forwardDirection * forwardDistance;
 
@@ -456,7 +457,7 @@ namespace Fragsurf.Movement
         /// <param name="p2"></param>
         public static void GetCapsulePoints(CapsuleCollider capc, Vector3 origin, out Vector3 p1, out Vector3 p2)
         {
-            var distanceToPoints = capc.height / 2f - capc.radius;
+            var distanceToPoints = capc.height / 2f; //Remove - capc.radius fix from DrDezmund
             p1 = origin + capc.center + Vector3.up * distanceToPoints;
             p2 = origin + capc.center - Vector3.up * distanceToPoints;
         }
