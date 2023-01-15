@@ -3,7 +3,7 @@ using Fragsurf.TraceUtil;
 
 namespace Fragsurf.Movement
 {
-    public class SurfPhysics
+    public static class SurfPhysics
     {
         ///// Fields /////
         public static int groundLayerMask = LayerMask.GetMask(new string[] { "Default", "Ground", "Player clip" }); //(1 << 0);
@@ -18,7 +18,6 @@ namespace Fragsurf.Movement
         public const float SurfSlope = 0.7f;
 
         ///// Methods /////
-        /// http://www.00jknight.com/blog/unity-character-controller
         public static void ResolveCollisions(Collider collider, ref Vector3 origin, ref Vector3 velocity, float rigidbodyPushForce, float velocityMultiplier = 1f, float stepOffset = 0f, ISurfControllable surfer = null)
         {
             // manual collision resolving
@@ -318,13 +317,11 @@ namespace Fragsurf.Movement
                 }
                 else
                 {
-                    int i = 0;
+                    int i;
                     for (i = 0; i < numplanes; i++)
                     {
                         ClipVelocity(originalVelocity, _planes[i], ref velocity, 1);
-
-                        int j = 0;
-
+                        int j;
                         for (j = 0; j < numplanes; j++)
                         {
                             if (j != i)
@@ -334,14 +331,13 @@ namespace Fragsurf.Movement
                                     break;
                             }
                         }
-
                         if (j == numplanes)  // Didn't have to clip, so we're ok
                             break;
                     }
 
                     // Did we go all the way through plane set
                     if (i == numplanes) // go along the crease
-                    {   
+                    {
                         if (numplanes != 2)
                         {
 
