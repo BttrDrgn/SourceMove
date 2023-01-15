@@ -64,7 +64,7 @@ namespace Fragsurf.Movement
                     // Step offset
                     if (stepOffset > 0f && surfer != null && surfer.moveData.useStepOffset)
                         if (StepOffset(collider, _colliders[i], ref origin, ref velocity, rigidbodyPushForce, velocityMultiplier, stepOffset, direction, distance, forwardVelocity, surfer))
-                            return;
+                            continue;
 
                     // Handle collision
                     direction.Normalize();
@@ -77,6 +77,10 @@ namespace Fragsurf.Movement
                     Rigidbody rb = _colliders[i].GetComponentInParent<Rigidbody>();
                     if (rb != null && !rb.isKinematic)
                         rb.AddForceAtPosition(velocityProjected * velocityMultiplier * rigidbodyPushForce, origin, ForceMode.Impulse);
+
+                    if (stepOffset > 0f && surfer != null && surfer.moveData.useStepOffset)
+                        if (StepOffset(collider, _colliders[i], ref origin, ref velocity, rigidbodyPushForce, velocityMultiplier, stepOffset, direction, distance, forwardVelocity, surfer))
+                            return;
                 }
             }
         }
@@ -90,16 +94,6 @@ namespace Fragsurf.Movement
             // Get forward direction (return if we aren't moving/are only moving vertically)
             Vector3 forwardDirection = forwardVelocity.normalized;
             if (forwardDirection.sqrMagnitude == 0f)
-                return false;
-
-            // Trace ground
-            Trace groundTrace = Tracer.TraceCollider(collider, origin, origin + Vector3.down * 0.1f, groundLayerMask);
-            if (groundTrace.hitCollider == null || Vector3.Angle(Vector3.up, groundTrace.planeNormal) > surfer.moveData.slopeLimit)
-                return false;
-
-            // Trace wall
-            Trace wallTrace = Tracer.TraceCollider(collider, origin, origin + velocity, groundLayerMask, 0.9f);
-            if (wallTrace.hitCollider == null || Vector3.Angle(Vector3.up, wallTrace.planeNormal) <= surfer.moveData.slopeLimit)
                 return false;
 
             // Trace upwards (check for roof etc)
@@ -116,13 +110,10 @@ namespace Fragsurf.Movement
 
             // Trace forwards (check for walls etc)
             float forwardMagnitude = stepOffset;
-            float forwardDistance = forwardMagnitude;
-            Trace forwardTrace = Tracer.TraceCollider(collider, upOrigin, upOrigin + forwardDirection * Mathf.Max(0.2f, forwardMagnitude), groundLayerMask);
-            if (forwardTrace.hitCollider != null)
-                forwardDistance = forwardTrace.distance;
 
-            // Don't bother doing the rest if we can't move forward anyway
-            if (forwardDistance <= 0f)
+            float forwardDistance = forwardMagnitude * Time.deltaTime;
+            Trace forwardTrace = Tracer.TraceCollider(collider, upOrigin, upOrigin + forwardDirection * forwardMagnitude, groundLayerMask);
+            if (forwardTrace.hitCollider != null && forwardDistance <= 0f) // Don't bother doing the rest if we can't move forward anyway
                 return false;
 
             Vector3 upForwardOrigin = upOrigin + forwardDirection * forwardDistance;
@@ -130,15 +121,17 @@ namespace Fragsurf.Movement
             // Trace down (find ground)
             float downDistance = upDistance;
             Trace downTrace = Tracer.TraceCollider(collider, upForwardOrigin, upForwardOrigin + Vector3.down * upDistance, groundLayerMask);
-            if (downTrace.hitCollider != null)
-                downDistance = downTrace.distance;
+            if (downTrace.hitCollider != null && Vector3.Angle(Vector3.up, downTrace.planeNormal) <= surfer.moveData.slopeLimit)
+                downDistance = downTrace.distance - 0.1f;
 
             // Check step size/angle
             float verticalStep = Mathf.Clamp(upDistance - downDistance, 0f, stepOffset);
             float horizontalStep = forwardDistance;
             float stepAngle = Vector3.Angle(Vector3.forward, new Vector3(0f, verticalStep, horizontalStep));
-            if (stepAngle > surfer.moveData.slopeLimit)
-                return false;
+
+            Debug.Log("Angle: " + stepAngle + "; " + Time.fixedTime);
+            //if (stepAngle > surfer.moveData.slopeLimit)
+            //return false;
 
             // Get new position
             Vector3 endOrigin = origin + Vector3.up * verticalStep;
@@ -146,12 +139,15 @@ namespace Fragsurf.Movement
             // Actually move
             if (origin != endOrigin && forwardDistance > 0f)
             {
-                Debug.Log("Moved up step!");
-                origin = endOrigin + forwardDirection * forwardDistance * Time.deltaTime;
+                //velocity -= forwardDirection * forwardDistance;
+                origin = endOrigin; //+ forwardDirection * forwardDistance;
                 return true;
             }
             else
+            {
+                Debug.Log("End origin same as origin; " + Time.fixedTime);
                 return false;
+            }
         }
 
         /// <summary>
