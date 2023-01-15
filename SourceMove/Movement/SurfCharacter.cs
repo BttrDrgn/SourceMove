@@ -311,13 +311,6 @@ namespace Fragsurf.Movement
             _moveData.wishJump = false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="angle"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
         public static float ClampAngle(float angle, float from, float to)
         {
             if (angle < 0f)

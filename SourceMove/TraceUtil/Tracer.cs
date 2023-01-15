@@ -4,14 +4,6 @@ namespace Fragsurf.TraceUtil
 {
     public class Tracer
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="collider"></param>
-        /// <param name="origin"></param>
-        /// <param name="end"></param>
-        /// <param name="layerMask"></param>
-        /// <returns></returns>
         public static Trace TraceCollider(Collider collider, Vector3 origin, Vector3 end, int layerMask, float colliderScale = 1f)
         {
             if (collider is BoxCollider)
@@ -33,10 +25,6 @@ namespace Fragsurf.TraceUtil
             throw new System.NotImplementedException("Trace missing for collider: " + collider.GetType());
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public static Trace TraceCapsule(Vector3 point1, Vector3 point2, float radius, Vector3 start, Vector3 destination, float contactOffset, int layerMask, float colliderScale = 1f)
         {
             var result = new Trace()
@@ -84,10 +72,6 @@ namespace Fragsurf.TraceUtil
             return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public static Trace TraceBox(Vector3 start, Vector3 destination, Vector3 extents, float contactOffset, int layerMask, float colliderScale = 1f)
         {
             var result = new Trace()

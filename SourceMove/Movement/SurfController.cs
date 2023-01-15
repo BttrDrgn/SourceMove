@@ -436,10 +436,6 @@ namespace Fragsurf.Movement
             _surfer.moveData.velocity.z *= _newSpeed;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         private Vector3 AirInputMovement()
         {
             Vector3 wishVel, wishDir;
@@ -456,12 +452,6 @@ namespace Fragsurf.Movement
             return SurfPhysics.AirAccelerate(_surfer.moveData.velocity, wishDir, wishSpeed, _config.airAcceleration, _config.airCap, _deltaTime);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="wishVel"></param>
-        /// <param name="wishDir"></param>
-        /// <param name="wishSpeed"></param>
         private void GetWishValues(out Vector3 wishVel, out Vector3 wishDir, out float wishSpeed)
         {
             wishVel = Vector3.zero;
@@ -484,11 +474,6 @@ namespace Fragsurf.Movement
             wishDir = wishVel.normalized;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="velocity"></param>
-        /// <param name="jumpPower"></param>
         private void Jump()
         {
             if (!_config.autoBhop)
@@ -524,10 +509,6 @@ namespace Fragsurf.Movement
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
         private void SetGround(GameObject obj)
         {
             if (obj != null)
@@ -541,22 +522,11 @@ namespace Fragsurf.Movement
                 _surfer.groundObject = null;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="layerMask"></param>
-        /// <returns></returns>
         private Trace TraceBounds(Vector3 start, Vector3 end, int layerMask)
         {
             return Tracer.TraceCollider(_surfer.collider, start, end, layerMask);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         private Trace TraceToFloor()
         {
             var down = _surfer.moveData.origin;

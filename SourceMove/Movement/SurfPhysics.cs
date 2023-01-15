@@ -6,10 +6,6 @@ namespace Fragsurf.Movement
     public class SurfPhysics
     {
         ///// Fields /////
-
-        /// <summary>
-        /// Change this if your ground is on a different layer
-        /// </summary>
         public static int groundLayerMask = LayerMask.GetMask(new string[] { "Default", "Ground", "Player clip" }); //(1 << 0);
 
         private static Collider[] _colliders = new Collider[maxCollisions];
@@ -22,13 +18,6 @@ namespace Fragsurf.Movement
         public const float SurfSlope = 0.7f;
 
         ///// Methods /////
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="collider"></param>
-        /// <param name="origin"></param>
-        /// <param name="velocity"></param>
         /// http://www.00jknight.com/blog/unity-character-controller
         public static void ResolveCollisions(Collider collider, ref Vector3 origin, ref Vector3 velocity, float rigidbodyPushForce, float velocityMultiplier = 1f, float stepOffset = 0f, ISurfControllable surfer = null)
         {
@@ -151,9 +140,6 @@ namespace Fragsurf.Movement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public static void Friction(ref Vector3 velocity, float stopSpeed, float friction, float deltaTime)
         {
             var speed = velocity.magnitude;
@@ -179,16 +165,6 @@ namespace Fragsurf.Movement
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="velocity"></param>
-        /// <param name="wishdir"></param>
-        /// <param name="wishspeed"></param>
-        /// <param name="accel"></param>
-        /// <param name="airCap"></param>
-        /// <param name="deltaTime"></param>
-        /// <returns></returns>
         public static Vector3 AirAccelerate(Vector3 velocity, Vector3 wishdir, float wishspeed, float accel, float airCap, float deltaTime)
         {
             var wishspd = wishspeed;
@@ -221,13 +197,6 @@ namespace Fragsurf.Movement
             return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="wishdir"></param>
-        /// <param name="wishspeed"></param>
-        /// <param name="accel"></param>
-        /// <returns></returns>
         public static Vector3 Accelerate(Vector3 currentVelocity, Vector3 wishdir, float wishspeed, float accel, float deltaTime, float surfaceFriction)
         {
             // See if we are changing direction a bit
@@ -256,14 +225,6 @@ namespace Fragsurf.Movement
             return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="velocity"></param>
-        /// <param name="origin"></param>
-        /// <param name="firstDestination"></param>
-        /// <param name="firstTrace"></param>
-        /// <returns></returns>
         public static int Reflect(ref Vector3 velocity, Collider collider, Vector3 origin, float deltaTime)
         {
             float d;
@@ -412,14 +373,6 @@ namespace Fragsurf.Movement
             return blocked;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="normal"></param>
-        /// <param name="output"></param>
-        /// <param name="overbounce"></param>
-        /// <returns></returns>
         public static int ClipVelocity(Vector3 input, Vector3 normal, ref Vector3 output, float overbounce)
         {
             var angle = normal[1];
@@ -450,11 +403,6 @@ namespace Fragsurf.Movement
             return blocked;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="p1"></param>
-        /// <param name="p2"></param>
         public static void GetCapsulePoints(CapsuleCollider capc, Vector3 origin, out Vector3 p1, out Vector3 p2)
         {
             var distanceToPoints = capc.height / 2f; //Remove - capc.radius fix from DrDezmund
