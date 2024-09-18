@@ -59,6 +59,7 @@ namespace Fragsurf.Movement
         private CameraWaterCheck _cameraWaterCheck;
 
         private MoveData _moveData = new MoveData();
+        private PlayerInput _playerInput;
         private SurfController _controller = new SurfController();
 
         private Rigidbody rb;
@@ -72,6 +73,7 @@ namespace Fragsurf.Movement
         public MoveType moveType { get { return MoveType.Walk; } }
         public MovementConfig moveConfig { get { return movementConfig; } }
         public MoveData moveData { get { return _moveData; } }
+        public PlayerInput playerInput { get { return _playerInput; } }
         public new Collider collider { get { return _collider; } }
 
         public GameObject groundObject
@@ -95,8 +97,19 @@ namespace Fragsurf.Movement
             Gizmos.DrawWireCube(transform.position, colliderSize);
         }
 
+        private void OnEnable()
+        {
+            _playerInput.Enable();
+        }
+
+        private void OnDisable()
+        {
+            _playerInput.Disable();
+        }
+
         private void Awake()
         {
+            _playerInput = new PlayerInput();
             _controller.playerTransform = playerRotationTransform;
 
             if (viewTransform != null)
@@ -145,15 +158,15 @@ namespace Fragsurf.Movement
 
             // rigidbody is required to collide with triggers
             rb = gameObject.GetComponent<Rigidbody>();
-            if (rb == null)
-                rb = gameObject.AddComponent<Rigidbody>();
+            if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
 
             allowCrouch = crouchingEnabled;
 
             rb.isKinematic = true;
             rb.useGravity = false;
-            rb.angularDrag = 0f;
-            rb.drag = 0f;
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            rb.angularDamping = 0f;
+            rb.linearDamping = 0f;
             rb.mass = weight;
 
             switch (collisionType)
@@ -262,22 +275,20 @@ namespace Fragsurf.Movement
 
         private void UpdateMoveData()
         {
-            _moveData.verticalAxis = Input.GetAxisRaw("Vertical");
-            _moveData.horizontalAxis = Input.GetAxisRaw("Horizontal");
+            Vector2 movement = _playerInput.Land.Move.ReadValue<Vector2>();
+            _moveData.verticalAxis = movement.y;
+            _moveData.horizontalAxis = movement.x;
 
-            _moveData.sprinting = Input.GetButton("Sprint");
+            _moveData.sprinting = _playerInput.Land.Sprint.ReadValue<float>() >= 1f;
 
-            if (Input.GetButtonDown("Crouch"))
-                _moveData.crouching = true;
-
-            if (!Input.GetButton("Crouch"))
-                _moveData.crouching = false;
+            if (_playerInput.Land.Crouch.ReadValue<float>() >= 1f) _moveData.crouching = true;
+            if (_playerInput.Land.Crouch.ReadValue<float>() <= 0f) _moveData.crouching = false;
 
             bool moveLeft = _moveData.horizontalAxis < 0f;
             bool moveRight = _moveData.horizontalAxis > 0f;
             bool moveFwd = _moveData.verticalAxis > 0f;
             bool moveBack = _moveData.verticalAxis < 0f;
-            bool jump = Input.GetButton("Jump");
+            bool jump = _playerInput.Land.Jump.ReadValue<float>() >= 1f;
 
             if (!moveLeft && !moveRight)
                 _moveData.sideMove = 0f;
@@ -293,11 +304,8 @@ namespace Fragsurf.Movement
             else if (moveBack)
                 _moveData.forwardMove = -moveConfig.acceleration;
 
-            if (Input.GetButtonDown("Jump"))
-                _moveData.wishJump = true;
-
-            if (!Input.GetButton("Jump"))
-                _moveData.wishJump = false;
+            if (jump) _moveData.wishJump = true;
+            if (!jump) _moveData.wishJump = false;
 
             _moveData.viewAngles = _angles;
         }

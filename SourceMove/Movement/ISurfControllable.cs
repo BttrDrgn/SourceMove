@@ -6,6 +6,7 @@ namespace Fragsurf.Movement
     {
         MoveType moveType { get; }
         MoveData moveData { get; }
+        PlayerInput playerInput { get; }
         Collider collider { get; }
         GameObject groundObject { get; set; }
         Vector3 forward { get; }
